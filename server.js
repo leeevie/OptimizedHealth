@@ -34,7 +34,7 @@ app.use(flash());
 
 
 //Section 2 USER REGISTRATION
-app.get('/registration', (req, res)=> {
+app.get('/', (req, res)=> {
 
   res.render('pages/registration',{
     page_title: "Registration Page",
@@ -44,7 +44,7 @@ app.get('/registration', (req, res)=> {
 });
 
 
-app.post('/registration', async (req,res)=>{
+app.post('/', async (req,res)=>{
   
   let{createusername, createemail, createpwd, confirmcreatepwd} = req.body;
   console.log({createusername, createemail, createpwd, confirmcreatepwd});
@@ -57,16 +57,18 @@ app.post('/registration', async (req,res)=>{
 
   if(createpwd.length < 6){
     errors.push({message: "Password too short. Must be at least 6 characters"});
+    //alert("Password too short. Must be at least 6 characters")
   }
 
   if(createpwd != confirmcreatepwd){
     errors.push({message: "Passwords do not match!"});
+    //alert("Passwords do not match!")
   }
 
   if(errors.length > 0){
     res.render('pages/registration', {
       page_title: "Registration Page",
-      error: errors
+      errors: errors
       
     })
   }else{
@@ -84,6 +86,7 @@ app.post('/registration', async (req,res)=>{
         }
         console.log(results.rows);
 
+        //if user email is already registered
         if(results.rows.length >0){
           errors.push({message: "Email already registered!"}); //Error message works!s
           res.render('pages/registration',{
@@ -331,7 +334,7 @@ app.get('/profile', (req, res)=> {
   else {
     // if not logged in, can't see profile page
     //or if server is restarted
-    res.redirect('/registration');
+    res.redirect('/');
   }
 });
 
@@ -608,11 +611,11 @@ app.post('/sleepreq', function(req, res, next){
   console.log(req.body.endTime);
   console.log(req.body.q1);
   console.log(req.body.yesNo);
-  console.log(req.body.futreGoalLenght);
-  console.log(req.body.futureStartTime);
-  console.log(req.body.futreEndTime);
-  console.log(req.body.realStartTime);
-  console.log(req.body.realEndTime);
+  // console.log(req.body.futreGoalLenght);
+  // console.log(req.body.futureStartTime);
+  // console.log(req.body.futreEndTime);
+  // console.log(req.body.realStartTime);
+  // console.log(req.body.realEndTime);
 
   var user_email = req.user.email;
 
@@ -620,8 +623,8 @@ app.post('/sleepreq', function(req, res, next){
   
 
  pool.query(
-   `INSERT INTO sleepInfo VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`, 
-    [req.body.sleepType, req.body.date, req.body.startTime, req.body.endTime, req.body.q1, req.body.yesNo, req.body.futureGoalLength, req.body.futureStartTime, req.body.futureEndTime, req.body.days, req.body.realStartTime, req.body.realEndTime, user_email, sleepID], (err, results)=>{
+   `INSERT INTO sleepInfo VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, 
+    [req.body.sleepType, req.body.date, req.body.startTime, req.body.endTime, req.body.q1, req.body.yesNo, user_email,sleepID], (err, results)=>{
       if(err){
         throw err
       }
